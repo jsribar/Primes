@@ -63,16 +63,19 @@ namespace Vsite.Pood
 
         private static void CrossOutMultiples()
         {
-            for (int i = 2; i < Math.Sqrt(crossed.Length) + 1; ++i)
+            for (int i = 2; i < CalcLargestCommonFactor(); ++i)
             {
                 if (NotCrossed(i)) // if i is uncrossed, cross its multiples (multiples are not primes)
                 {
-                    for (int j = 2 * i; j < crossed.Length; j += i)
-                    {
-                        crossed[j] = true; // multiple is not a prime
-                    }
+                    CrossOutMultiplesOf(i);
                 }
             }
+        }
+
+        private static int CalcLargestCommonFactor()
+        {
+            var commonFactor = Math.Sqrt(crossed.Length) + 1;
+            return (int)commonFactor;
         }
 
         private static bool NotCrossed(int i)
@@ -80,16 +83,17 @@ namespace Vsite.Pood
             return !crossed[i];
         }
 
+        private static void CrossOutMultiplesOf(int i)
+        {
+            for (int j = 2 * i; j < crossed.Length; j += i)
+            {
+                crossed[j] = true; // multiple is not a prime
+            }
+        }
+
         private static void CollectUnCrossedIntegers()
         {
-            int count = 0;
-            for (int i = 2; i < crossed.Length; ++i)
-            {
-                if (NotCrossed(i))
-                {
-                    ++count;
-                }
-            }
+            int count = GetNumberOfUncrossed();
 
             primes = new int[count];
 
@@ -103,7 +107,17 @@ namespace Vsite.Pood
             }
         }
 
-
-
+        private static int GetNumberOfUncrossed()
+        {
+            int count = 0;
+            for (int i = 2; i < crossed.Length; ++i)
+            {
+                if (NotCrossed(i))
+                {
+                    ++count;
+                }
+            }
+            return count;
+        }
     }
 }
