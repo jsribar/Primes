@@ -31,7 +31,7 @@ namespace Vsite.Pood
             }
         }
 
-        private static bool[] f; // flags for prime numbers
+        private static bool[] crossed; // flags for prime numbers
         private static int[] primes;
 
         // From the book "Agile Principles, Patterns and Practices in C#", by Robert C. Martin
@@ -54,9 +54,9 @@ namespace Vsite.Pood
         private static void CollectUnCrossedIntegers()
         {
             int count = 0;
-            for (int i = 2; i < f.Length; ++i)
+            for (int i = 2; i < crossed.Length; ++i)
             {
-                if (f[i])
+                if (!crossed[i])
                 {
                     ++count;
                 }
@@ -65,9 +65,9 @@ namespace Vsite.Pood
             primes = new int[count];
 
             // move primes into the result
-            for (int i = 2, j = 0; i < f.Length; ++i)
+            for (int i = 2, j = 0; i < crossed.Length; ++i)
             {
-                if (f[i])
+                if (!crossed[i])
                 {
                     primes[j++] = i;
                 }
@@ -76,13 +76,13 @@ namespace Vsite.Pood
 
         private static void CrossOutMultiples()
         {
-            for (int i = 2; i < Math.Sqrt(f.Length) + 1; ++i)
+            for (int i = 2; i < Math.Sqrt(crossed.Length) + 1; ++i)
             {
-                if (f[i]) // if i is uncrossed, cross its multiples (multiples are not primes)
+                if (!crossed[i]) // if i is uncrossed, cross its multiples (multiples are not primes)
                 {
-                    for (int j = 2 * i; j < f.Length; j += i)
+                    for (int j = 2 * i; j < crossed.Length; j += i)
                     {
-                        f[j] = false; // multiple is not a prime
+                        crossed[j] = true; // multiple is not a prime
                     }
                 }
             }
@@ -90,11 +90,11 @@ namespace Vsite.Pood
 
         private static void GenerateArrayOfFlags(int maxValue)
         {
-            f = new bool[maxValue + 1];
+            crossed = new bool[maxValue + 1];
 
-            for (int i = 2; i < f.Length; ++i)
+            for (int i = 2; i < crossed.Length; ++i)
             {
-                f[i] = true;
+                crossed[i] = false;
             }
         }
     }
