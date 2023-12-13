@@ -31,7 +31,6 @@ namespace Vsite.Pood
             }
         }
 
-        private static int s; // size of array
         private static bool[] f; // flags for prime numbers
         private static int[] primes;
 
@@ -43,57 +42,60 @@ namespace Vsite.Pood
                 return new int[0];
             }
 
-            GenerateSieve(maxValue);
+            GenerateArrayOfFlags(maxValue);
 
-            Sieve();
+            CrossOutMultiples();
 
-            CollectPrimes();
+            CollectUnCrossedIntegers();
 
             return primes; // return the primes
         }
 
-        private static void CollectPrimes()
+        private static void CollectUnCrossedIntegers()
         {
             int count = 0;
-            for (int i = 0; i < s; ++i)
+            for (int i = 2; i < f.Length; ++i)
             {
                 if (f[i])
+                {
                     ++count;
+                }
             }
 
             primes = new int[count];
 
             // move primes into the result
-            for (int i = 0, j = 0; i < s; ++i)
+            for (int i = 2, j = 0; i < f.Length; ++i)
             {
                 if (f[i])
-                    primes[j++] = i;
-            }
-        }
-
-        private static void Sieve()
-        {
-            for (int i = 2; i < Math.Sqrt(s) + 1; ++i)
-            {
-                if (f[i]) // if i is uncrossed, cross its multiples (multiples are not primes)
                 {
-                    for (int j = 2 * i; j < s; j += i)
-                        f[j] = false; // multiple is not a prime
+                    primes[j++] = i;
                 }
             }
         }
 
-        private static void GenerateSieve(int maxValue)
+        private static void CrossOutMultiples()
         {
-            s = maxValue + 1;
-            f = new bool[s];
+            for (int i = 2; i < Math.Sqrt(f.Length) + 1; ++i)
+            {
+                if (f[i]) // if i is uncrossed, cross its multiples (multiples are not primes)
+                {
+                    for (int j = 2 * i; j < f.Length; j += i)
+                    {
+                        f[j] = false; // multiple is not a prime
+                    }
+                }
+            }
+        }
 
-            // initialize array to true
-            for (int i = 0; i < s; ++i)
+        private static void GenerateArrayOfFlags(int maxValue)
+        {
+            f = new bool[maxValue + 1];
+
+            for (int i = 2; i < f.Length; ++i)
+            {
                 f[i] = true;
-
-            // get rid of known non-primes 0 and 1
-            f[0] = f[1] = false;
+            }
         }
     }
 }
