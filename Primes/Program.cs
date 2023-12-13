@@ -51,12 +51,41 @@ namespace Vsite.Pood
             return primes; // return the primes
         }
 
+        private static void GenerateArrayOfFlags(int maxValue)
+        {
+            crossed = new bool[maxValue + 1];
+
+            for (int i = 2; i < crossed.Length; ++i)
+            {
+                crossed[i] = false;
+            }
+        }
+
+        private static void CrossOutMultiples()
+        {
+            for (int i = 2; i < Math.Sqrt(crossed.Length) + 1; ++i)
+            {
+                if (NotCrossed(i)) // if i is uncrossed, cross its multiples (multiples are not primes)
+                {
+                    for (int j = 2 * i; j < crossed.Length; j += i)
+                    {
+                        crossed[j] = true; // multiple is not a prime
+                    }
+                }
+            }
+        }
+
+        private static bool NotCrossed(int i)
+        {
+            return !crossed[i];
+        }
+
         private static void CollectUnCrossedIntegers()
         {
             int count = 0;
             for (int i = 2; i < crossed.Length; ++i)
             {
-                if (!crossed[i])
+                if (NotCrossed(i))
                 {
                     ++count;
                 }
@@ -67,35 +96,14 @@ namespace Vsite.Pood
             // move primes into the result
             for (int i = 2, j = 0; i < crossed.Length; ++i)
             {
-                if (!crossed[i])
+                if (NotCrossed(i))
                 {
                     primes[j++] = i;
                 }
             }
         }
 
-        private static void CrossOutMultiples()
-        {
-            for (int i = 2; i < Math.Sqrt(crossed.Length) + 1; ++i)
-            {
-                if (!crossed[i]) // if i is uncrossed, cross its multiples (multiples are not primes)
-                {
-                    for (int j = 2 * i; j < crossed.Length; j += i)
-                    {
-                        crossed[j] = true; // multiple is not a prime
-                    }
-                }
-            }
-        }
 
-        private static void GenerateArrayOfFlags(int maxValue)
-        {
-            crossed = new bool[maxValue + 1];
 
-            for (int i = 2; i < crossed.Length; ++i)
-            {
-                crossed[i] = false;
-            }
-        }
     }
 }
